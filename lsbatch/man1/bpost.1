@@ -1,0 +1,70 @@
+.ds ]W %
+.ds ]L
+.nh
+.TH post 1 "OpenLava Version 3.2 - Jan 2016"
+.br
+.SH NAME
+\fBbpost\fR - sends message to a job
+.SH SYNOPSIS
+.BR
+.PP
+.PP
+\fBbpost\fR\fB \fR\f \fR-d "message"\fR \fR\fIjob_ID\fR | \fB"\fR\fIjob_ID\fR\fB[\fR\fIindex\fR\fB]"
+.PP
+\fBbpost\fR\fB \fR[\fB-h\fR | \fB-V\fR]
+.SH DESCRIPTION
+.BR
+.PP
+.PP
+Allows user to post messages to his/her own job. Messages can be posted until
+the job is cleaned from OpenLava. There is no limit to the number of messages
+posted to a job, however the size of each message cannot
+exceed 1023 characters.
+.PP
+User can only post messages to his/her own jobs. User cannot post messages
+to jobs submitted by others. Only root and OpenLava administrators can post
+messages to jobs submitted by other users.
+\fB\f
+
+.SH OPTIONS
+.BR
+.PP
+.TP
+ \fIjob_ID\fR | \fB"\fR\fIjob_ID\fR\fB[\fR\fIindex\fR\fB]"
+\fR
+.IP
+Required. Job ID that the message is to be posted.
+
+.IP
+For an array job, the index, the square brackets, and the quotation
+marks are required.
+.TP
+\fB-d
+\fR
+.IP
+Specifies the message to be posted to the job.
+.TP
+\fB-h
+\fR
+.IP
+Prints command usage to stderr and exits.
+
+.TP
+\fB-V
+\fR
+.IP
+Prints openlava release version to stderr and exits.
+
+.SH EXAMPLE
+.BR
+.PP
+.TP
+$bpost -d "message in a bottle" 7249
+.PP
+Message to job 7249 posted all right.
+
+.SH SEE ALSO
+.BR
+.PP
+.PP
+bread(1), bjobs(1)

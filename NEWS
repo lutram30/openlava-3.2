@@ -1,0 +1,259 @@
+Release notes for OpenLava versions
+
+3.2.1
+======
+-- Fix the parsing algorithm for compact host name.
+-- Fix a bug in bmgroup where by mistake the -s and -r options were dropped.
+-- Update bmgrop and bugroup man pages.
+-- Enlarge the -J name job name to be at leat 1024 characters.
+
+3.2.0
+======
+-- Fix main Makefile.am to include the m4 directory.
+
+3.2.beta1
+=========
+-- Hosts member od a host group can now be specified in a compact format
+   for example: (ol[1-3]).
+-- Implement configure option --enable-debug. If set the compilation will
+   have the -Werror option enabled. By default this option is not set.
+
+3.2.pre
+========
+-- badmin ckconfig/reconfig displays configuration error and warning
+   messages.
+-- bsub/bmod/brestart -h displays usage information.
+-- Added USER_SHARES information in lsb.users.5
+-- Add lsclusters command.
+-- Use qsort() to sort jobs in MBD this improves the performance
+   of replay and general bsub operations.
+-- Introduce a getc2() functions to read lsb.events in memory
+   before parsing it.
+-- Reduce the number of malloc operations when reading the
+   lsb.events file.
+-- Implement memory reservation if the queue has SLOT_MEMORY_RESERVE configured
+   and the job requests rusage of memory. The jobs has to reserve slots
+   on the hosts as well.
+-- Implement a correct switching of the lim.events file.
+-- Update the bmgroup command to display GROUP_SLOT and MAX_SLOTS
+   sections if configured.
+-- Update the bqueues command to display slot and memory reservation.
+-- Allow batch hosts configured in lsb.hosts to be specified in a
+   compact form, i.e. ol[1-3] the mbatchd will expand example this into 3
+   hosts ol1, ol2, ol3.
+-- Allow OpenLava to use cores as cpus regardless is the machines has
+   hyperthreads or not. To enable this behaviour set the variable
+   LIM_DEFINE_NCPUS=cores|threads in lsf.conf. Default is threads.
+-- Fix bsub bug in which if user specify -n min,max the max was ignored.
+-- Make fairshare configuration compatible with the LSF one.
+
+3.1.4
+======
+
+-- Fix the problem that if the order of events in lim.events is not correct
+   LIM may core dump.
+-- Change the ownership of the mbatchd log file to avoid messages going
+   to syslog messages file.
+-- Prevent LIM from core dumping in findHost() if the input name is NULL.
+-- Enable the secondary admin to run 'badmin reconfig'.
+-- Fix res nios protocol to pass the correct taskid to nios.
+
+3.1.3
+======
+-- Corrected the lsf.cluster man page describing LIM communication
+   parameters.
+-- Enable LIM communication debugging using LC_COMM class and
+   LOG_INFO level.
+-- Fix bug in announceMaster() which was slowing down announcement
+   of slave hosts.
+-- Fix a bug in the slave host timer causing slave to send load
+   to master more frequently then necessary.
+-- Fix counter update in fairshare policy when jobs are suspended
+   and resumed.
+-- Remove spurious res log messages.
+
+3.1.2
+=====
+-- Fix a critical mbatchd bug when sorting queues.
+-- Enable the openlava.spec file and the rpm.sh script
+   which builds the rpm.
+
+3.1.1
+=====
+-- Fix scheduling bug in which performance could drop if the lowest
+   priority queue was always full.
+-- Fix the incorrect encoding of bchkpnt command data structure.
+
+3.1.0
+======
+-- Modify openlava.sh to forcefully terminate sbatchd if SIGTERM does
+   not work.
+-- Fix LIM bug in which the code was accessing non initialized memory.
+-- Fix several memory leaks in LIM.
+-- Fix res hang in child handler.
+-- Fix memory corruption in mbatchd when dealing with rusage.
+-- Fix mbatchd child core dump when processing bugroup command.
+-- Improve fairshare performance.
+-- Introduce an lsf.conf parameter MBD_MAX_JOB_SCHED which allows site
+   to configure how many jobs should MBD attempt to schedule per cycle.
+   Typically two times the number of slots.
+-- Introduce an lsf.conf parameter MBD_QSORT_JOBS which changes the way
+   jobs are inserted and sorted in the PJL. This parameter avoids searching
+   the job list upon a new job arrival speeding up the submission and overall
+   MBD operations.
+-- Fix issues in the job sorting order while using qsort().
+-- Increase the array size of LIM clients from 64 to 2014.
+-- Fix lim core dump if the lim receives an operation request from
+   outside of the OL cluster and it is not LIM_ADD_HOST.
+-- Fix bsub < file which was not creating the shell file correctly.
+-- Fix rusage bug in which the host could be allocated to a job even with
+   not enough resources.
+-- Fix memory error in mbatchd when computing job's rusage.
+-- Fix various memory leaks
+
+3.1pre1
+=======
+
+-- Removed obsolete mls code and infrastructure simplifying user
+   management.
+-- No longer run mbatchd as root. The uid of the daemon is the one
+   of the primary lsb manager.
+-- Support memory contraining using cgroup for batch jobs.
+-- Developed a built in resource names 'slots' used by mbatchd only.
+   This resource allows to pack or stripe jobs on hosts.
+-- Developed the rusage or functionality. -R "rusage[x=1||y=2]".
+-- Introduced LSB_PROJECT_NAME variable in job and preexec environment.
+-- Developed the host group based slot resources. A host group can have
+   a resource which represents the number of available slots in that
+   group. An oridnary shared resource is configured in the base
+   files but also in lsb.hosts in the group section. No elim is needed
+   to collect this resource as mbatchd computes the slots automatically.
+-- Introduce a mutex to protect critical section in the syslog library.
+-- lsaddhost has a new -M option. This indicates the MXJ that should be
+   assigned to the batch host, this also sets the number of CPUS available
+   on the batch host.
+-- Improve scheduling performance when jobs use shared resources.
+-- Improve rusage syntax parsing, now spaces between operands are ignored
+   and mbatchd does not syntax error.
+-- Keep updating man pages.
+-- Add the environment variable LSB_EFFECTIVE_RUSAGE. In case a job is using
+   the rusage or feature this variable indicates which or clause evaluated
+   true dispatching the job.
+-- Fix fairshare bug which prevented jobs from being scheduled if groups
+   had different shares.
+-- Added support for client only hosts. These are host that do not run
+   OpenLava daemons but can run commands and submit jobs.
+-- Fix mbatchd bug that limited the output and error file to 80 characters
+   of length.
+-- Enlarged MAXLSFNAMELEN to 1024.
+-- Introduce cpu binding using sched_setaffinity()/sched_getaffinity(),
+   this feature is enabled by setting SBD_BIND_CPU=y in lsf.conf.
+-- Introduced LOAD_UPDATE_INTVL parameter in lsb.params. It controls how
+   often MBD calls LIM to update load and shared resources. The default
+   value is 15 seconds. Smaller the value and faster is the scheduler
+   response to changes in resource values.
+-- Fix MBD job lists bug preventing preemption from working correctly.
+-- Add -rdynamic option to gcc as new compiler (4.8.3)don't set it by default.
+-- Fix the limitation of the select() system call which can handle only 1024
+   simultaneous connections. Use poll() instead.
+-- Fix potential buffer overrun in lim when running elim.
+-- Modify bparams and mbatchd to display maxSbdConnections.
+-- Added a new feature MAX_SLOTS in lsb.hosts which is the upper limit
+   for the number of usable slots in a hostgroup. The parameter GROUP_SLOTS
+   must be enabled in lsb.hosts.
+-- Fix wrong calculation of fairshare free slots in the bqueues -l display.
+
+3.0.1
+======
+
+-- Fix bug in openlava.in, the variable err was incorrectly defined.
+-- Fix xdr version number bug in lsb.xdr.c
+-- Fix hostID bug which prevented queue JL/H from working properly.
+-- Allow comma as separator together with colon when rusage is
+   specified. e.g -R rusage[mem=1,vcs=2]
+-- Fix the bug which prevented bsub -K from working.
+-- Add script for Intel MPI.
+-- Fix mbatchd core dump if the preemption plugin cannot be loaded.
+-- Link daemons and commands statically so there is no need to
+   set LD_LIBRARY_PATH in the environment.
+-- Add LSF_LIBDIR in the lsf.conf.in template.
+-- Fix mbatchd core dump when replying partially cleaned job arrays.
+-- Modify the resource requirement parser to handle compact syntax,
+   like select[swp>1].
+-- Implement lim -t to print the architecture, model, cores, sockets
+   number of cpus and bogomips of the machine where lim is running.
+-- Fix the bug in which sbatchd was logging post exec failure even if
+   the post exec ran fine.
+-- Reduce or remove sleep times in res.
+-- Implement sorting by MXJ in mbatchd.
+-- Implement sorting by cpu factor in mbatchd.
+-- Fix bjobs -pl core dump.
+-- Fix bug in job lists management which leads to mbatchd core dumps.
+
+3.0
+====
+
+Major release which includes hierarchical slot fairshare and preemption.
+
+3.0beta
+=======
+-- Queue level preemption
+-- Queue level fairshare
+-- Fix LIM core dump when lim.events has bad format
+-- Ignore PREEMPTABLE keyword in lsb.queues
+-- Implement bpost/bread commands using API
+   lsb_msgjob()/lsb_getmsgjob().
+-- Implement docker integration
+-- Rename the lsb_msgjob()/lsb_getmsgjob() to
+   lsb_postjobmsg()/lsb_readjobmsg() for compatibility
+-- Fix bug in which every user can shutdown LIM.
+
+2.3-0rc
+========
+-- Fix the problem of host going periodically -ok.
+-- Fix timer initialization in LIM.
+-- Fix mbatchd to clean HOST_STAT_EXCLUSIVE when reply lsb.events.
+-- Fix job dependencies by name. The dependencies by name incorrectly
+   included all jobs belong to the user submitting the jobs.
+-- The daemons are not using privilege ports anymore even if
+   running as root.
+-- Reduce the RES_SLEEP_TIME from 30s to 15s to avoid hosts appearing
+   as not available in lim.
+-- Remove obsolete INTER_DAEMON_AUTH define.
+-- Remove the need for privilege port between res and lim.
+
+2.2
+====
+-- RPM files are no longer distributed, however they can still be built
+   from the tarball.
+-- When migrant hosts are added or removed, we must increment or
+   decrement the numHosts field in the struct clusterNode (myClusterPtr)
+   to allow the periodic master announcement to be sent to dynamic
+   nodes in the cluster on master lim restart.
+-- Don't call select in rd_select_() when the input file descriptor
+   is less than zero, as this causes a buffer overflow abort when
+   openlava is built with fortify for debian packages.
+-- Fix core dump in bjobs. Since 2.1 hostid start from 0.
+-- Fixed a typo in the lsf.cluster man page.
+-- Print correct pending reason when hostid is 0.
+-- Corrected HACKING file.
+-- make install no longer installs the configuration file, this avoids
+   overwriting production configuration files.
+-- Added -fPIC option to configure.ac - needed when compiling the object
+   code into a library for use in third party tools.
+-- Fixed bsub -I, now the the job data are correcty sent to the
+   user terminal and viceversa.
+-- Accept `DESTDIR` environment variable, allowing staged installs.
+-- Avoid announcing all LIMs at the same time.
+-- Install the config.h in include directory.
+-- Fixed lshosts -l core dump.
+-- Change the behaviour of the SBD SIGCHLD handler. By default, the
+   handler would sleep for 1 second for each child reaped, which would
+   cause long waits on machines with lots of slots when lots of jobs
+   finished at the same time (e.g. lots of short jobs). The default is
+   now to not sleep at all.
+-- Count cached memory as free memory.
+-- Added error exit message for missing ncurses.h
+-- Added MANPATH to shell profile scripts.
+-- Allow multiple hosttypes and hostmodels in the shared and cluster file.
+   LIM now can be configured with any type and model.

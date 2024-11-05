@@ -1,0 +1,89 @@
+/*
+ * Copyright (C) 2011-2014 David Bigagli
+ * Copyright (C) 2007 Platform Computing Inc
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of version 2 of the GNU General Public License as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ *
+ */
+
+#ifndef _LIB_TABLE_H_
+#define _LIB_TABLE_H_
+
+#define RESETFACTOR     2
+#define RESETLIMIT      1.5
+#define DEFAULT_SLOTS   11
+
+/* Double linked list addressed by each
+ * hash table slot.
+ */
+struct hLinks {
+    struct hLinks *fwPtr;
+    struct hLinks *bwPtr;
+};
+
+/* This is a slot entry the table
+ */
+typedef struct hEnt {
+    struct hLinks   *fwPtr;
+    struct hLinks   *bwPtr;
+    void            *hData;
+    char            *keyname;
+} hEnt;
+
+/* This si the hash table itself.
+ */
+typedef struct hTab {
+    struct hLinks   *slotPtr;
+    int             numEnts;
+    int             size;
+} hTab;
+
+
+typedef struct sTab {
+    hTab            *tabPtr;
+    int             nIndex;
+    hEnt            *hEntPtr;
+    struct hLinks   *hList;
+} sTab;
+
+#define HTAB_ZERO_OUT(HashTab) \
+{ \
+    (HashTab)->numEnts = 0; \
+    (HashTab)->size = 0; \
+}
+
+#define HTAB_NUM_ELEMENTS(HashTab) (HashTab)->numEnts
+
+typedef void       (*HTAB_DATA_DESTROY_FUNC_T)(void *);
+
+extern void   insList_(struct hLinks *, struct hLinks *);
+extern void   remList_(struct hLinks *);
+extern void   initList_(struct hLinks *);
+extern void   h_initTab_(hTab *, int);
+extern void   h_freeTab_(hTab *, void (*destroy)(void *));
+extern int    h_TabEmpty_(hTab *);
+extern void   h_delTab_(hTab *);
+extern hEnt   *h_getEnt_(hTab *, const char *);
+extern hEnt   *h_addEnt_(hTab *, const char *, int *);
+extern void   h_delEnt_(hTab *, hEnt *);
+extern void   h_rmEnt_(hTab *, hEnt *);
+extern hEnt   *h_firstEnt_(hTab *, sTab *);
+extern hEnt   *h_nextEnt_(sTab *);
+extern void   h_freeRefTab_(hTab *);
+extern void   h_delRef_(hTab *, hEnt *);
+#endif
+
+
+
+

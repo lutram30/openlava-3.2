@@ -1,0 +1,61 @@
+.ds ]W %
+.ds ]L
+.nh
+.TH post 1 "OpenLava Version 3.2 - Jan 2016"
+.br
+.SH NAME
+\fBbread\fR - reads message from a job
+.SH SYNOPSIS
+.BR
+.PP
+.PP
+\fBbread\fR \fIjob_ID\fR | \fB"\fR\fIjob_ID\fR\fB[\fR\fIindex\fR\fB]"
+.PP
+\fBbread\fR\fB \fR[\fB-h\fR | \fB-V\fR]
+.SH DESCRIPTION
+.BR
+.PP
+.PP
+Allows user to read messages previously posted to a job. Messages can be
+read until the job is cleaned from the OpenLava system. User can read
+messages of jobs submitted by other users.
+\fB\f
+
+.SH OPTIONS
+.BR
+.PP
+.TP
+ \fIjob_ID\fR | \fB"\fR\fIjob_ID\fR\fB[\fR\fIindex\fR\fB]"
+\fR
+.IP
+Required. Job ID that the messages are read from.
+
+.IP
+For an array job, the index, the square brackets, and the quotation
+marks are required.
+.TP
+\fB-h
+\fR
+.IP
+Prints command usage to stderr and exits.
+
+.TP
+\fB-V
+\fR
+.IP
+Prints openlava release version to stderr and exits.
+.SH EXAMPLE
+.BR
+.PP
+.TP
+ $ bread 7249
+.PP
+Messages posted to jobID 7249
+.PP
+POST_TIME: Apr  6 14:03:42  MESSAGE: message in a bottle
+
+.SH SEE ALSO
+.BR
+.PP
+.PP
+bread(1), bjobs(1)
